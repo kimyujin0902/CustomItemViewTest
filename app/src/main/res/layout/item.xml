@@ -2,16 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="#000000">
+    android:background="#000000"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textItem1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="0.5dp"
-        android:gravity="center"
-        android:text="text"
-        android:background="#FFFFFF" />
+        android:background="#FFFFFF"
+        android:gravity="center_horizontal"
+        android:text="text" />
+
+    <TextView
+        android:id="@+id/textItem2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"/>
 
 </LinearLayout>

@@ -7,14 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeChangedListener {//implements OnMapReadyCallback {
+public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeChangedListener  {//implements OnMapReadyCallback {
+    final static String TAG="SQLITEDBTEST";
     int year, month, shour, sminute, fhour, fminute;
     String date;
     DBHelper mDBHelper;
-    EditText title, place, memo;
+    EditText mId, mTitle, mPlace, mMemo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +29,8 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
         month = getIntent.getIntExtra("MONTH", 0);
         date = getIntent.getStringExtra("DATE");
 
+        mDBHelper = new DBHelper(this);
+
         TimePicker mStartTimePicker = (TimePicker)findViewById(R.id.time_start);
         mStartTimePicker.setOnTimeChangedListener(this);
         shour = mStartTimePicker.getHour();
@@ -39,15 +41,28 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
         fhour = mFinishTimePicker.getHour();
         fminute = mFinishTimePicker.getMinute();
 
-        title = (EditText) findViewById(R.id.title);
-        title.setHint(""+year+"년 "+month+"월 "+date+"일");
+        mId = (EditText) findViewById(R.id._id);
+
+        mTitle = (EditText) findViewById(R.id.title);
+        mTitle.setHint(""+year+"년 "+month+"월 "+date+"일");
         //Log.i("hey", "get: "+year+"/"+month+"/"+date);
 
-        place = (EditText) findViewById(R.id.place);
+        mPlace = (EditText) findViewById(R.id.place);
 
         Button btnSearch = (Button) findViewById(R.id.btn_search);
 
         Button btnSave = (Button)findViewById((R.id.btn_save));
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertRecord();
+
+//                viewAllToTextView();
+//                viewAllToListView();
+                finish();
+            }
+        });
+
         Button btnCancel = (Button)findViewById((R.id.btn_cancel));
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +73,11 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
 
         Button btnDelete = (Button)findViewById((R.id.btn_delete));
 
-        memo = (EditText) findViewById(R.id.memo);
+        mMemo = (EditText) findViewById(R.id.memo);
 
+    }
+    public interface InsertScheduleEvent {
+        public void InsertSchedule(int i);
     }
 
     @Override
@@ -67,4 +85,22 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
             fhour = h;
             fminute = m;
     }
+
+//    public void onMapReady(GoogleMap googleMap) {
+//        LatLng Myhome = new LatLng(37.623134, 127.058886);
+//        googleMap.addMarker(new MarkerOptions().position(Myhome).title("한성대학교"));
+//        // move the camera
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(Myhome));
+//    }
+
+    private void deleteRecord() {
+        EditText _id = (EditText) findViewById(R.id._id);
+        mDBHelper.deleteUserBySQL(_id.getText().toString());
+    }
+
+    private void insertRecord() {
+
+        mDBHelper.insertUserBySQL(mTitle.getText().toString(), mPlace.getText().toString(), mMemo.getText().toString());
+    }
+
 }

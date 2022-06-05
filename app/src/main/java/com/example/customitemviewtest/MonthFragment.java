@@ -123,6 +123,9 @@ public class MonthFragment extends Fragment {
         return rootView;
     }
 
+    public interface InsertScheduleEvent {
+        public void InsertSchedule(int i);
+    }
     public ArrayList<DateItem> make_date(int sDay, int dSize){
         ArrayList<DateItem> mDates = new ArrayList<>();
         for(int i=1; i<sDay; i++)
