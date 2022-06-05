@@ -1,5 +1,6 @@
 package com.example.customitemviewtest;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class MonthFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private int mYear;
     private int mMonth;
+    private boolean prevSelected = false;
+    private TextView clickedView;
     static MyAdapter adapter;
 
     public MonthFragment(int year, int month) {
@@ -96,9 +100,16 @@ public class MonthFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View vClicked,
                                     int position, long id) {
+                if(prevSelected){
+                    clickedView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                }
                 String date = ((MyItem) adapter.getItem(position)).mDate;
                 Toast.makeText(getActivity(), (year+"/"+(month+1)+"/"+date),
                         Toast.LENGTH_SHORT).show();
+
+                clickedView = vClicked.findViewById((R.id.textItem1));
+                clickedView.setBackgroundColor(Color.parseColor("#00FFFF"));
+                prevSelected = true;
             }
         });
 
