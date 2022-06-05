@@ -10,8 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomItemViewTest">
         <activity
+            android:name=".CalendarApp"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyD3btPnV4GkEnzTf7gVdPSwZhXsbfhHreE" />
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

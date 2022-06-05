@@ -1,9 +1,9 @@
 package com.example.customitemviewtest;
 
-public class MyItem {
+public class DateItem {
     String mDate;
 
-    MyItem(String aDate) {
+    DateItem(String aDate) {
         mDate = aDate;
     }
 }

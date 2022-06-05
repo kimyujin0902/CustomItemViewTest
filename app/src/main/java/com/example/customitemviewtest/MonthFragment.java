@@ -1,5 +1,6 @@
 package com.example.customitemviewtest;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -13,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,9 +35,10 @@ public class MonthFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private int mYear;
     private int mMonth;
+    private String mDate;
     private boolean prevSelected = false;
     private TextView clickedView;
-    static MyAdapter adapter;
+    static ItemAdapter adapter;
 
     public MonthFragment(int year, int month) {
         mYear = year;
@@ -74,26 +78,16 @@ public class MonthFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_month, container, false);
-        ArrayList<MyItem> Dates = new ArrayList<MyItem>();
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(""+mYear+"년 "+(mMonth+1)+"월");
 
         Calendar calendar = Calendar.getInstance();
-        int year = mYear;
-        int month = mMonth;
-        Log.i("hey", "year, month: "+year+", "+month);
-        calendar.set(year, month, 1);
+        calendar.set(mYear, mMonth, 1);
         int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         int startDay = calendar.get(calendar.DAY_OF_WEEK);
-        int daySize = lastDay + startDay - 1;
-        Log.i("hey", "lastDay, startDay, daySize "+lastDay+", "+startDay+", "+daySize);
+        ArrayList<DateItem> Dates = make_date(startDay, lastDay + startDay - 1);
 
-        for(int i=1; i<startDay; i++)
-            Dates.add(new MyItem(""));
-        for(int i=startDay-1; i<daySize; i++)
-            Dates.add(new MyItem("" + (i - startDay + 2)));
-        for(int i=daySize; i<42; i++)
-            Dates.add(new MyItem(""));
-
-        adapter = new MyAdapter(getActivity(), R.layout.item, Dates);
+        adapter = new ItemAdapter(getActivity(), R.layout.item, Dates);
 
         GridView gridView = (GridView)rootView.findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
@@ -103,8 +97,8 @@ public class MonthFragment extends Fragment {
                 if(prevSelected){
                     clickedView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 }
-                String date = ((MyItem) adapter.getItem(position)).mDate;
-                Toast.makeText(getActivity(), (year+"/"+(month+1)+"/"+date),
+                mDate = ((DateItem) adapter.getItem(position)).mDate;
+                Toast.makeText(getActivity(), (mYear+"/"+(mMonth+1)+"/"+mDate),
                         Toast.LENGTH_SHORT).show();
 
                 clickedView = vClicked.findViewById((R.id.textItem1));
@@ -113,7 +107,32 @@ public class MonthFragment extends Fragment {
             }
         });
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(""+year+"년 "+(month+1)+"월");
+        FloatingActionButton fab = (FloatingActionButton)rootView.findViewById(R.id.fab_btn);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent((MainActivity)getActivity(), CalendarApp.class); //그룹 만들기 화면으로 연결
+                intent.putExtra("YEAR", mYear);
+                intent.putExtra("MONTH", mMonth);
+                intent.putExtra("DATE", mDate);
+                Log.i("hey", ""+mYear+"/"+mMonth+"/"+mDate);
+                startActivity(intent); //액티비티 열기
+            }
+        });
+
         return rootView;
     }
+
+    public ArrayList<DateItem> make_date(int sDay, int dSize){
+        ArrayList<DateItem> mDates = new ArrayList<>();
+        for(int i=1; i<sDay; i++)
+            mDates.add(new DateItem(""));
+        for(int i=sDay-1; i<dSize; i++)
+            mDates.add(new DateItem("" + (i - sDay + 2)));
+        for(int i=dSize; i<42; i++)
+            mDates.add(new DateItem(""));
+
+        return mDates;
+    }
 }
+

@@ -3,25 +3,22 @@ package com.example.customitemviewtest;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends BaseAdapter {
+public class ItemAdapter extends BaseAdapter {
     private Context mContext;
     private int mResource;
-    private ArrayList<MyItem> mItems = new ArrayList<MyItem>();
+    private ArrayList<DateItem> mItems = new ArrayList<DateItem>();
 
-    public MyAdapter(Context context, int resource, ArrayList<MyItem> items) {
+    public ItemAdapter(Context context, int resource, ArrayList<DateItem> items) {
         mContext = context;
         mItems = items;
         mResource = resource;
