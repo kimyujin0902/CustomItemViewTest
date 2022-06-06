@@ -35,10 +35,11 @@ public class MonthFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private int mYear;
     private int mMonth;
-    private String mDate;
+    private String mDate, test;
     private boolean prevSelected = false;
-    private TextView clickedView;
+    private TextView clickedView1, clickedView2;
     static ItemAdapter adapter;
+    private DBHelper mDBHelper;
 
     public MonthFragment(int year, int month) {
         mYear = year;
@@ -95,14 +96,17 @@ public class MonthFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View vClicked,
                                     int position, long id) {
                 if(prevSelected){
-                    clickedView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    clickedView1.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                    clickedView2.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 }
                 mDate = ((DateItem) adapter.getItem(position)).mDate;
                 Toast.makeText(getActivity(), (mYear+"/"+(mMonth+1)+"/"+mDate),
                         Toast.LENGTH_SHORT).show();
 
-                clickedView = vClicked.findViewById((R.id.textItem1));
-                clickedView.setBackgroundColor(Color.parseColor("#00FFFF"));
+                clickedView1 = vClicked.findViewById((R.id.textItem1));
+                clickedView1.setBackgroundColor(Color.parseColor("#00FFFF"));
+                clickedView2 = vClicked.findViewById((R.id.textItem2));
+                clickedView2.setBackgroundColor(Color.parseColor("#00FFFF"));
                 prevSelected = true;
             }
         });
@@ -137,5 +141,26 @@ public class MonthFragment extends Fragment {
 
         return mDates;
     }
+
+    public void onStart() {
+        super.onStart();
+        Log.i("hey", "onStart()"+mYear+mMonth+mDate);
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.i("hey", "onPause()"+mYear+mMonth+mDate);
+    }
+    public void onResume() {
+        super.onResume();
+        String date = ""+mYear+mMonth+mDate;
+        Log.i("hey", "onResume(): "+date);
+//        mDBHelper.getUsersMySQL("Title", "Date", date);
+    }
+//        String date = ""+mYear+mMonth+mDate;
+//        Log.i("hey", "omResume(): "+date);
+//        mDBHelper = new DBHelper(getActivity());
+//        mDBHelper.getUsersMySQL("title", date);
+//    }
 }
 

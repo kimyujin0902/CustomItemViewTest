@@ -28,94 +28,59 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertUserBySQL(String title, String place, String memo) {
+    public void insertUserBySQL(String title, String place, String memo, String date) {
         try {
             String sql = String.format(
-                    "INSERT INTO %s (%s, %s, %s) VALUES (NULL, '%s', '%s')",
+                    "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (NULL, '%s', '%s', '%s', '%s')",
                     UserContract.Users.TABLE_NAME,
                     UserContract.Users._ID,
                     UserContract.Users.KEY_TITLE,
                     UserContract.Users.KEY_PLACE,
                     UserContract.Users.KEY_MEMO,
+                    UserContract.Users.KEY_DATE,
                     title,
                     place,
-                    memo);
+                    memo,
+                    date);
 
             getWritableDatabase().execSQL(sql);
-            Log.i(TAG, "insert("+title+", "+place+", "+memo+")");
+            Log.i(TAG, "insert("+title+", "+place+", "+memo+", "+date+")");
         } catch (SQLException e) {
             Log.e(TAG, "Error in inserting recodes");
         }
     }
 
-//    public Cursor getAllUsersBySQL() {
-//        String sql = "Select * FROM " + UserContract.Users.TABLE_NAME;
-//        return getReadableDatabase().rawQuery(sql, null);
-//    }
+    public Cursor getAllUsersBySQL() {
+        String sql = "Select * FROM " + UserContract.Users.TABLE_NAME;
+        return getReadableDatabase().rawQuery(sql, null);
+    }
 
-    public void deleteUserBySQL(String _id) {
+    public String getUsersMySQL(String what, String key, String value) {
+        String sql = String.format(
+                "Select %s FROM %s WHERE %s = '%s'",
+                what,
+                UserContract.Users.TABLE_NAME,
+                key,
+                value);
+        StringBuffer buffer = new StringBuffer();
+        Cursor cursor = getReadableDatabase().rawQuery(sql, null);
+        cursor.moveToNext();
+        Log.i("hey", "cursor.getString(1): " + cursor.getString(1));
+        return cursor.getString(1);
+    }
+
+
+    public void deleteUserBySQL(String date) {
         try {
             String sql = String.format(
-                    "DELETE FROM %s WHERE %s = %s",
+                    "DELETE FROM %s WHERE %s = '%s'",
                     UserContract.Users.TABLE_NAME,
-                    UserContract.Users._ID,
-                    _id);
+                    UserContract.Users.KEY_DATE,
+                    date);
             getWritableDatabase().execSQL(sql);
         } catch (SQLException e) {
             Log.e(TAG, "Error in deleting recodes");
         }
     }
-
-//    public void updateUserBySQL(String _id, String title, String place, String memo) {
-//        try {
-//            String sql = String.format(
-//                    "UPDATE  %s SET %s = '%s', %s = '%s', %s = '%s' WHERE %s = %s",
-//                    UserContract.Users.TABLE_NAME,
-//                    UserContract.Users.KEY_TITLE, title,
-//                    UserContract.Users.KEY_PLACE, place,
-//                    UserContract.Users.KEY_MEMO, memo,
-//                    UserContract.Users._ID, _id);
-//            getWritableDatabase().execSQL(sql);
-//        } catch (SQLException e) {
-//            Log.e(TAG, "Error in updating recodes");
-//        }
-//    }
-//
-//    public long insertUserByMethod(String title, String place, String memo) {
-//        SQLiteDatabase db = getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(UserContract.Users.KEY_TITLE, title);
-//        values.put(UserContract.Users.KEY_PLACE, place);
-//        values.put(UserContract.Users.KEY_MEMO, memo);
-//
-//        return db.insert(UserContract.Users.TABLE_NAME, null, values);
-//    }
-//
-//    public Cursor getAllUsersByMethod() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        return db.query(UserContract.Users.TABLE_NAME, null, null, null, null, null, null);
-//    }
-//
-//    public long deleteUserByMethod(String _id) {
-//        SQLiteDatabase db = getWritableDatabase();
-//
-//        String whereClause = UserContract.Users._ID + " = ?";
-//        String[] whereArgs = {_id};
-//        return db.delete(UserContract.Users.TABLE_NAME, whereClause, whereArgs);
-//    }
-//
-//    public long updateUserByMethod(String _id, String title, String place, String memo) {
-//        SQLiteDatabase db = getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(UserContract.Users.KEY_TITLE, title);
-//        values.put(UserContract.Users.KEY_PLACE, place);
-//        values.put(UserContract.Users.KEY_MEMO, memo);
-//
-//        String whereClause = UserContract.Users._ID + " = ?";
-//        String[] whereArgs = {_id};
-//
-//        return db.update(UserContract.Users.TABLE_NAME, values, whereClause, whereArgs);
-//    }
 }
 

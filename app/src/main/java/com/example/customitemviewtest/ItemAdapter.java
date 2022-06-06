@@ -3,10 +3,12 @@ package com.example.customitemviewtest;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -49,10 +51,10 @@ public class ItemAdapter extends BaseAdapter {
         TextView date = (TextView) convertView.findViewById(R.id.textItem1);
         date.setText(mItems.get(position).mDate);
 
+        TextView schedule = (TextView) convertView.findViewById(R.id.textItem2);
         Point size = new Point();
         mContext.getDisplay().getSize(size);
-        //Log.i("hey", "size= ("+size.x+", "+size.y+")");
-        date.setHeight(size.y/7);
+        schedule.setHeight(size.y/9);
         return convertView;
     }
 }

@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        getSupportActionBar().setTitle("haha");
-
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new MonthViewFragment()).commit();
     }
 

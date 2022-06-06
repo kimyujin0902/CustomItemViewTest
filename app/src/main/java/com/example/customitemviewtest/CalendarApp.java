@@ -1,9 +1,12 @@
 package com.example.customitemviewtest;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,8 +14,8 @@ import android.widget.TimePicker;
 
 public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeChangedListener  {//implements OnMapReadyCallback {
     final static String TAG="SQLITEDBTEST";
-    int year, month, shour, sminute, fhour, fminute;
-    String date;
+    int mYear, mMonth, sHour, sMinute, fHour, fMinute;
+    String mDate, DATE;
     DBHelper mDBHelper;
     EditText mId, mTitle, mPlace, mMemo;
     @Override
@@ -25,26 +28,26 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
 //        mapFragment.getMapAsync(this);
 
         Intent getIntent = getIntent();
-        year = getIntent.getIntExtra("YEAR", 0);
-        month = getIntent.getIntExtra("MONTH", 0);
-        date = getIntent.getStringExtra("DATE");
-
+        mYear = getIntent.getIntExtra("YEAR", 0);
+        mMonth = getIntent.getIntExtra("MONTH", 0);
+        mDate = getIntent.getStringExtra("DATE");
+        DATE = ""+mYear+mMonth+mDate;
         mDBHelper = new DBHelper(this);
 
         TimePicker mStartTimePicker = (TimePicker)findViewById(R.id.time_start);
         mStartTimePicker.setOnTimeChangedListener(this);
-        shour = mStartTimePicker.getHour();
-        sminute = mStartTimePicker.getMinute();
+        sHour = mStartTimePicker.getHour();
+        sMinute = mStartTimePicker.getMinute();
 
         TimePicker mFinishTimePicker = (TimePicker)findViewById(R.id.time_finish);
         mFinishTimePicker.setOnTimeChangedListener(this);
-        fhour = mFinishTimePicker.getHour();
-        fminute = mFinishTimePicker.getMinute();
+        fHour = mFinishTimePicker.getHour();
+        fMinute = mFinishTimePicker.getMinute();
 
         mId = (EditText) findViewById(R.id._id);
 
         mTitle = (EditText) findViewById(R.id.title);
-        mTitle.setHint(""+year+"년 "+month+"월 "+date+"일");
+        mTitle.setHint(""+ mYear +"년 "+(mMonth +1)+"월 "+ mDate +"일");
         //Log.i("hey", "get: "+year+"/"+month+"/"+date);
 
         mPlace = (EditText) findViewById(R.id.place);
@@ -56,7 +59,6 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
             @Override
             public void onClick(View view) {
                 insertRecord();
-
 //                viewAllToTextView();
 //                viewAllToListView();
                 finish();
@@ -76,14 +78,11 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
         mMemo = (EditText) findViewById(R.id.memo);
 
     }
-    public interface InsertScheduleEvent {
-        public void InsertSchedule(int i);
-    }
 
     @Override
     public void onTimeChanged(TimePicker timePicker, int h, int m) {
-            fhour = h;
-            fminute = m;
+            fHour = h;
+            fMinute = m;
     }
 
 //    public void onMapReady(GoogleMap googleMap) {
@@ -94,13 +93,27 @@ public class CalendarApp extends AppCompatActivity implements TimePicker.OnTimeC
 //    }
 
     private void deleteRecord() {
-        EditText _id = (EditText) findViewById(R.id._id);
-        mDBHelper.deleteUserBySQL(_id.getText().toString());
+        Log.i("SQL", "deleteRecord()"+DATE);
+        mDBHelper.deleteUserBySQL(DATE);
     }
 
     private void insertRecord() {
-
-        mDBHelper.insertUserBySQL(mTitle.getText().toString(), mPlace.getText().toString(), mMemo.getText().toString());
+        String mDate = ""+ mYear + mMonth + this.mDate;
+        mDBHelper.insertUserBySQL(mTitle.getText().toString(), mPlace.getText().toString(), mMemo.getText().toString(), mDate);
     }
 
+    public void OnClickHandler(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("DELETE").setMessage("일정을 삭제합니다");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteRecord();
+                finish();
+            }
+        });
+        builder.setNegativeButton("취소", null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
